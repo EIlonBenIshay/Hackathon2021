@@ -113,18 +113,18 @@ def getTeamName(connection):
             name_received = False
     return name, name_received
 
-def UDPInitConnection(ourPort):
+def UDPInitConnection(port):
     cs = socket(AF_INET, SOCK_DGRAM)
     cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
     cs.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
-    msg = pack('!IBH', 0xfeedbeef, 0x2, ourPort)
+    msg = pack('!IBH', 0xfeedbeef, 0x2, port)
     return cs, msg
 
 
-def TCPInitConnection(ourPort):
+def TCPInitConnection(port):
     host = gethostname()
     sock = socket(AF_INET, SOCK_STREAM)
-    server_address = (host, ourPort)
+    server_address = (host, port)
     try:
         sock.bind(server_address)
     except:
@@ -135,6 +135,7 @@ def Main():
     global team_1,team_2,team_1_connection,team_2_connection,question,answer,answer_team
     host = gethostname()
     port = random.randint(2000,40000)
+    print(port)
     print(f"{Blue}server started, listening on IP address\n{End}",gethostbyname(host))
 
     sock = TCPInitConnection(port)

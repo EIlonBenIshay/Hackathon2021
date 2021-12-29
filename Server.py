@@ -3,6 +3,7 @@ from struct import *
 import time
 import threading
 import random
+from scapy.all import *
 
 #test
 Red = "\033[31;1m"
@@ -121,8 +122,7 @@ def UDPInitConnection():                #set a new UDP socket
     return cs
 
 
-def TCPInitConnection(port): #set a new TCP socket
-    host = gethostname()
+def TCPInitConnection(host, port): #set a new TCP socket
     sock = socket(AF_INET, SOCK_STREAM)
     server_address = (host, port)
     try:
@@ -133,11 +133,11 @@ def TCPInitConnection(port): #set a new TCP socket
 
 def Main():
     global team_1,team_2,team_1_connection,team_2_connection,question,answer,answer_team
-    host = gethostname()
+    host = get_if_address("eth2")
     port = random.randint(2000,40000)
     print(f"{Blue}server started, listening on IP address\n{End}",gethostbyname(host))
 
-    sock = TCPInitConnection(port)
+    sock = TCPInitConnection(host, port)
 
     cs = UDPInitConnection()
     msg = pack('!IBH', 0xfeedbeef, 0x2, port)

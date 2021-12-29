@@ -1,4 +1,4 @@
-from socket import *
+#from socket import *
 from struct import *
 import time
 import threading

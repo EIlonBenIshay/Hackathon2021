@@ -67,10 +67,7 @@ def getClientAnswer(connection, client_num):
                     answer_team = client_num
                     lock1.release()
         except:
-            try:
-                connection.close()
-            except:
-                pass
+            pass
     try:
         connection.sendall(conclude().encode('utf-8'))
         try:

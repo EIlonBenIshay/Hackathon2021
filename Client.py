@@ -71,7 +71,7 @@ def Main():
             if data2 == 0x2 and data1 == 0xfeedbeef:  # checking recieved message from broadcast
                 print(f"{Blue}received offer from{End}", host, f"{Blue},attempting to connect...\n{End}")
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                server_address = (host, TCP_Port)
+                server_address = ("172.0.0.1", TCP_Port)
                 try:
                     sock.connect(server_address)
                 except:

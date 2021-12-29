@@ -1,214 +1,106 @@
-from socket import *
-from struct import *
+import socket
+import struct
+from threading import Thread
 import time
-import threading
-import random
+import getch
 
-Bold = "\033[1m"
 Red = "\033[31;1m"
 Green = "\033[32;1m"
 Yellow = "\033[33;1m"
 Blue = "\033[34;1m"
-end = "\033[0;1m"
-
-GROUP_1 = []
-GROUP_2 = []
-TUP = [GROUP_1, GROUP_2]
-Counter_TUP = [0, 0]
-lock = threading.Lock()
-lock2 = threading.Lock()
-MV = []
-BroadcastIP = '255.255.255.255'
-BroadcastPort = 13117
+End = "\033[0;1m"
+UDPPort = 13117
+buf_size = 1024
 
 
-def threaded(connection):  # run func for threading
-    counter = 0
-    ClientName = ''
-    gotName = False
-    endTime = time.time() + 10
-
-    # giving the client 10 sec to send his name
-    ClientName, gotName = getTeamName(ClientName, connection, endTime, gotName)
-
-    n = random.randint(1, 2)
-    if gotName:
-        # adding the player to his team
-        addTeamName(ClientName, n)
-        message = f"{Blue}you have 10 seconds start typing as fast as you cannnnnn{end}"
-        try:
-            # sending the players welcome message
-            connection.sendall(message.encode('utf-8'))
-        except:
-            print(f"{Red}connection from client lost{end}")
-            try:
-                connection.close()
-                return
-            except:
-                return
-    # count pressings on the key board that the player send to the server
-    counter = getKeyboardInput(connection, counter)
-    # adding the count of pressing to the team of the player
-    increaseCounter(counter, n)
+# thread that sends packets to the server
+def Start_Game(socket):
     try:
-        # send the result of the game
-        connection.sendall(GameOutput().encode())
-        connection.close()
-    except:
-        try:
-            connection.close()
-        except:
-            pass
-
-
-# adding player to his team
-def addTeamName(ClientName, n):
-    lock.acquire()
-    if n == 2:
-        TUP[1].append(ClientName)
-    else:
-        TUP[0].append(ClientName)
-    lock.release()
-
-
-# fun that adding points to the team of each player
-def getKeyboardInput(connection, counter):
-    # calculating points of pressing of the keyboard for 10 sec (the end of the game)
-    endTime = time.time() + 10
-    while time.time() < endTime:
-        try:
-            data = connection.recv(1)
-            if data:
-                counter = counter + 1
-        except:
-            pass
-    return counter
-
-
-# fun to increase the score of each player to his team
-def increaseCounter(counter, n):
-    # using lock to prevent the overriding of the team score.
-    lock2.acquire()
-    if (n == 1):
-        Counter_TUP[0] = Counter_TUP[0] + counter
-    else:
-        Counter_TUP[1] = Counter_TUP[1] + counter
-    lock2.release()
-
-
-# function that get thae name of the player until getting \n
-def getTeamName(ClientName, connection, endTime, gotName):
-    while time.time() < endTime and not gotName:
-        try:
-            data = connection.recv(1)
-            if data.decode('utf-8') == '\n':
-                gotName = True
-            else:
-                ClientName = ClientName + data.decode('utf-8')
-        except:
-            gotName = False
-    return ClientName, gotName
-
-
-def Main():
-    # MV.append(0)
-    ourPort = random.randint(2000,40000)
-
-    # calling fun to init the TCP connection
-    sock = TCPInitConnection(ourPort)
-    # calling fun to init the UDP connection
-    cs, message = UDPInitConnection(ourPort)
-
-    try:
-        sock.listen()
-        while True:
-            tmp_counter = 0  # thread counter
-            threads = []
-
-            # run for 10 sec and collecting players by adding them to the array of threads
-            endTime = time.time() + 10
-            while time.time() < endTime:
-                try:
-                    cs.sendto(message, (BroadcastIP, BroadcastPort))  # broadcast
-                except:
-                    print(f"{Red}broadcasting failed{end}")
-                time.sleep(1)
-                sock.settimeout(0)  # non blocking con
-                try:
-                    # initializing threads
-                    connection, addr = sock.accept()
-
-                    # set the connection socket non blocking
-                    connection.settimeout(0)
-
-                    t = threading.Thread(target=threaded, args=(connection,))
-                    threads.append(t)
-                    tmp_counter = tmp_counter + 1
-                except:
-                    pass
-            # starting the game by stating the thread of each player
-            for x in threads:
-                x.start()
-            for x in threads:
-                x.join()
-
-            if tmp_counter > 0:
-                # print the result of the game
-                print(GameOutput())
-                # initializing vars before starting a new one
-                Counter_TUP[0] = 0
-                Counter_TUP[1] = 0
-                TUP[1] = []
-                TUP[0] = []
+                #socket.settimeout(max(0, time_to_end - time_now))  # recive the max for timeout
+                send = getch.getch()  # receive the charactars as hiding chars , which dosent shown
+                print(send)
+                socket.sendall(send.encode('utf-8'))
+                print("was sent")
     except:
         pass
 
 
-# function that formulates the output string
-def GameOutput():
-    toPrint = f"{Green}GROUP1\n==\n{end}"
-    for x in TUP[0]:
-        toPrint = toPrint + x +'\n'
-    toPrint = toPrint + f"{Green}GROUP2\n==\n{end}"
-    for x in TUP[1]:
-        toPrint = toPrint + x +'\n'
-    toPrint = toPrint + '\n'
-    if Counter_TUP[0] != 0 or Counter_TUP[1] != 0:
-        if Counter_TUP[0] > Counter_TUP[1]:
-            toPrint = toPrint + f"{Blue}GROUP 1 WINSS WITH {end}" + str(Counter_TUP[0]) + f"{Blue} POINTS{end}" + '\n'
-            for x in TUP[0]:
-                toPrint = toPrint + x + '\n'
-        elif Counter_TUP[0] < Counter_TUP[1]:
-            toPrint = toPrint + f"{Blue}GROUP 2 WINS WITH {end}" + str(Counter_TUP[1]) + f"{Blue} POINTS{end}" + '\n'
-            for x in TUP[1]:
-                toPrint = toPrint + x + '\n'
-        else:
-            toPrint = toPrint + f"{Blue}its a DRAWWWWWW{end} " + '\n'
-
-    return toPrint
-
-
-# function that init the UDP connection that broadcast the game offer to the players
-def UDPInitConnection(ourPort):
-    cs = socket(AF_INET, SOCK_DGRAM)
-    cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
-    cs.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
-    message = pack('!IBH', 0xfeedbeef, 0x2, ourPort)
-    return cs, message
-
-
-# function that init the TCP connection that that accepts the players clients
-def TCPInitConnection(ourPort):
-    # TCP
-    host = gethostname()
-    print(f"{Green}server started, listening on IP address{end}",gethostbyname(host))
-    sock = socket(AF_INET, SOCK_STREAM)
-    server_address = (host, ourPort)
+# thread that listen to the server in the game so he can print the result of the game
+def Print_the_Score_Res(sock):
     try:
-        sock.bind(server_address)
+        time_now = time.time()
+        time_to_end = time.time() + 10
+        while time_now < time_to_end:
+            output = sock.recv(buf_size)
+            if output:
+                print(output.decode('utf-8'))
+            time_now = time.time()
     except:
-        print(f"{Red}error binding{end}")
-    return sock
+        pass
+
+
+def Main():
+    name_of_team = "eilon\n"
+    print(f"{Blue}Client started,listening for offer requests...\n{End}")
+    # initial the udp connection
+    cl = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    cl.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    cl.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    try:
+        cl.bind(("", UDPPort))
+    except:
+        print(f"{Red}error binding{End}")
+
+    while True:
+        # recivind the
+        data1, addr = cl.recvfrom(buf_size)
+        host, UDP_Port = addr
+        try:
+            data1, data2, TCP_Port = struct.unpack('!IBH', data1)
+            print("tcp_port = /n", TCP_Port)
+            print("host = /n", host)
+            print("UDP_PORT = /n", UDP_Port)
+            print("data1 = /n", hex(data1))
+            print("data2 = /n", hex(data2))
+            
+            if data2 == 0x2 and data1 == 0xfeedbeef:  # checking recieved message from broadcast
+                print(f"{Blue}received offer from{End}", host, f"{Blue},attempting to connect...\n{End}")
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                server_address = ("127.0.0.1", TCP_Port)
+                try:
+                    sock.connect(server_address)
+                except:
+                    print(f"{Red}connection failed{End}")
+                try:
+                    print("sending the name")
+                    # sending the team name
+                    sock.sendall(name_of_team.encode('utf-8'))
+                    is_data_found = False
+                    time_to_end = time.time() + 10
+                    time_now = time.time()
+                    # give the server 10 sec to give us the permition to start the game
+                    while not is_data_found and time_now < time_to_end:
+                        data = sock.recv(2048)
+                        # starting the game
+                        if data is not None:
+                            print(data.decode('utf-8'))
+                            # open two threads on for sending, the other for lisining for the result of the end of the game
+                            # starting the first thread to send packets for 10 sec
+                            send = Thread(target=Start_Game, args=(sock,))
+                            send.start()
+                            send.join()
+                            # starting  the second thread which prints the server responses for 10 sec
+                            listen = Thread(target=Print_the_Score_Res, args=(sock,))
+                            listen.start()
+                            listen.join()
+                            is_data_found = True
+                        time_now = time.time()
+                except:
+                    print(f"{Red}server closed{End}")
+                finally:
+                    sock.close()
+        except:
+            pass
 
 
 if __name__ == '__main__':

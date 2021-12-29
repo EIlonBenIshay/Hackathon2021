@@ -45,7 +45,7 @@ def Print_the_Score_Res(sock):
 
 
 def Main():
-    name_of_team = f"{Green}D&D\n{End}"
+    name_of_team = "Beholder\n"
     print(f"{Blue}Client started,listening for offer requests...\n{End}")
     # initial the udp connection
     cl = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

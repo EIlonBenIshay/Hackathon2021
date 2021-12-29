@@ -58,12 +58,12 @@ def getClientAnswer(connection, client_num):
             data = connection.recv(1)
             if data:
                 processed_data = data.decode('utf-8')
-                lock1.acquire()
+                lock2.acquire()
                 if answer_team > 0:
                     answer = processed_data
                     answer_team = client_num
                     print(answer, "\t", answer_team)
-                    lock1.release()
+                    lock2.release()
         except:
             pass
     try:

@@ -65,6 +65,8 @@ def Main():
             print("tcp_port = /n", TCP_Port)
             print("host = /n", host)
             print("UDP_PORT = /n", UDP_Port)
+            print("data1 = /n", data1)
+            print("data2 = /n", data2)
             
             if data2 == 0x2 and data1 == 0xfeedbeef:  # checking recieved message from broadcast
                 print(f"{Blue}received offer from{End}", host, f"{Blue},attempting to connect...\n{End}")

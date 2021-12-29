@@ -58,7 +58,7 @@ def getClientAnswer(connection, client_num):
             data = connection.recv(1)
             if data:
                 processed_data = data.decode('utf-8')
-                print(processed_data)
+                print("the data is: ", processed_data)
                 lock1.acquire()
                 if len(answer_team) == 0:
                     answer = processed_data
@@ -114,6 +114,7 @@ def getTeamName(connection):
                 name = name + data.decode('utf-8')
         except:
             name_received = False
+    print(name)
     return name, name_received
 
 def UDPInitConnection():
@@ -159,7 +160,6 @@ def Main():
                 time.sleep(1)
                 sock.settimeout(0)
                 try:
-                    print("attempt to connect client")
                     connection, addr = sock.accept()
                     print("client has connected")
                     connection.settimeout(0)

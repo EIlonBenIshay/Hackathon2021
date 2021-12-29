@@ -58,9 +58,7 @@ def getClientAnswer(connection, client_num):
         try:
             data = connection.recv(1)
             if data:
-                print("wow", client_num)
                 processed_data = data.decode('utf-8')
-                print("the data is: ", processed_data)
                 lock1.acquire()
                 if len(answer_team) == 0:
                     answer = processed_data
@@ -69,7 +67,9 @@ def getClientAnswer(connection, client_num):
         except:
             pass
     try:
+        print("before")
         connection.sendall(conclude().encode('utf-8'))
+        print("after")
         try:
             connection.close()
         except:

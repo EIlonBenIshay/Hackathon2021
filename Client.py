@@ -56,13 +56,7 @@ def Main():
         data1, addr = cl.recvfrom(buf_size)
         host, UDP_Port = addr
         try:
-            data1, data2, TCP_Port = struct.unpack('!IBH', data1)
-            print("tcp_port = /n", TCP_Port)
-            print("host = /n", host)
-            print("UDP_PORT = /n", UDP_Port)
-            print("data1 = /n", hex(data1))
-            print("data2 = /n", hex(data2))
-            
+            data1, data2, TCP_Port = struct.unpack('!IBH', data1)        
             if data2 == 0x2 and data1 == 0xfeedbeef:  # checking recieved message from broadcast
                 print(f"{Blue}received offer from{End}", host, f"{Blue},attempting to connect...\n{End}")
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

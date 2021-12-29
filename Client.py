@@ -22,7 +22,7 @@ def Start_Game(socket):
                 #socket.settimeout(max(0, time_to_end - time_now))  # recive the max for timeout
                 send = getch.getch()  # receive the charactars as hiding chars , which dosent shown
                 print(send)
-                socket.sendall(send.encode())
+                socket.sendall(send.encode('utf-8'))
                 print("was sent")
             except:
                 pass

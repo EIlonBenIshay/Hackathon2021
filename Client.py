@@ -16,16 +16,11 @@ buf_size = 1024
 # thread that sends packets to the server
 def Start_Game(socket):
     try:
-        time_to_end = time.time() + 10  # here we initial the time to finish
-        while time.time() < time_to_end:
-            try:
                 #socket.settimeout(max(0, time_to_end - time_now))  # recive the max for timeout
                 send = getch.getch()  # receive the charactars as hiding chars , which dosent shown
                 print(send)
                 socket.sendall(send.encode('utf-8'))
                 print("was sent")
-            except:
-                pass
     except:
         pass
 

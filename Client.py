@@ -77,6 +77,7 @@ def Main():
                 except:
                     print(f"{Red}connection failed{End}")
                 try:
+                    print("sending the name")
                     # sending the team name
                     sock.sendall(name_of_team.encode('utf-8'))
                     is_data_found = False

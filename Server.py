@@ -144,12 +144,14 @@ def Main():
     try:
         sock.listen()
         while True:
+            print("first while")
             counter = 0
             client_threads = []
 
             end = time.time() + 10
 
             while time.time() < end:
+                print("second while")
                 if(counter < 2):
                     try:
                         cs.sendto(msg, (BroadcastIP, BroadcastPort))
@@ -181,7 +183,7 @@ def Main():
                 t2.start()
                 t1.join()
                 t2.join()
-            print(conclude())
+                print(conclude())
             team_1 = ""
             team_1_connection = None
             team_2 = ""

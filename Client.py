@@ -62,6 +62,10 @@ def Main():
         host, UDP_Port = addr
         try:
             data1, data2, TCP_Port = struct.unpack('!IBH', data1)
+            print("tcp_port = /n", TCP_Port)
+            print("host = /n", host)
+            print("UDP_PORT = /n", UDP_Port)
+            
             if data2 == 0x2 and data1 == 0xfeedbeef:  # checking recieved message from broadcast
                 print(f"{Blue}received offer from{End}", host, f"{Blue},attempting to connect...\n{End}")
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

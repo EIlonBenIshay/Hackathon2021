@@ -3,6 +3,8 @@ import struct
 from threading import Thread
 import time
 import getch
+from scapy.all import get_if_addr
+
 
 Red = "\033[31;1m"
 Green = "\033[32;1m"

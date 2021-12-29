@@ -175,12 +175,12 @@ def Main():
                     ct.start()
                 for ct in client_threads:
                     ct.join()
-            t1 = threading.Thread(target=getClientAnswer, args=(team_1_connection, 1))
-            t2 = threading.Thread(target=getClientAnswer, args=(team_2_connection, 2))
-            t1.start()
-            t2.start()
-            t1.join()
-            t2.join()
+                t1 = threading.Thread(target=getClientAnswer, args=(team_1_connection, 1))
+                t2 = threading.Thread(target=getClientAnswer, args=(team_2_connection, 2))
+                t1.start()
+                t2.start()
+                t1.join()
+                t2.join()
             print(conclude())
             team_1 = ""
             team_1_connection = None

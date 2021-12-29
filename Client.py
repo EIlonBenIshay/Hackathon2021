@@ -24,6 +24,7 @@ def Start_Game(socket):
                 print(send)
                 socket.sendall(send.encode('utf-8'))
             except:
+                print("failed to send")
                 pass
     except:
         pass

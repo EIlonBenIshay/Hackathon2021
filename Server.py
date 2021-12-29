@@ -42,7 +42,6 @@ def clientThread(connection):
 
 def getClientAnswer(connection, client_num):
     print("client", client_num, " is answering")
-    global answer_team, answer
     message = ("you have 10 seconds to answer the following question:\n" + question[0])
     try:
         connection.sendall(message.encode('utf-8'))
@@ -198,7 +197,7 @@ def Main():
 def conclude():
     to_return = ""
     to_return += ("the correct answer was - " + question[1] + "\n")
-    if answer == '':
+    if answer_team == -1:
         to_return += "It's a Draw!"
     else:
         if answer == question[1]:

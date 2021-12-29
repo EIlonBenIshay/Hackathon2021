@@ -17,13 +17,11 @@ buf_size = 1024
 def Start_Game(socket):
     try:
         time_to_end = time.time() + 10  # here we initial the time to finish
-        time_now = time.time()
-        while time_now < time_to_end:
+        while time.time() < time_to_end:
             try:
-                socket.settimeout(max(0, time_to_end - time_now))  # recive the max for timeout
+                #socket.settimeout(max(0, time_to_end - time_now))  # recive the max for timeout
                 send = getch.getch()  # receive the charactars as hiding chars , which dosent shown
                 socket.sendall(send.encode())
-                time_now=time.time()
             except:
                 pass
     except:

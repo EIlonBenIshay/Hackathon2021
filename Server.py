@@ -139,7 +139,7 @@ def Main():
 
     sock = TCPInitConnection(port)
 
-    cs = UDPInitConnection(port)
+    cs = UDPInitConnection()
     msg = pack('!IBH', 0xfeedbeef, 0x2, port)
 
 

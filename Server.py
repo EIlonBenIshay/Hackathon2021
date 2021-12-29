@@ -59,9 +59,10 @@ def getClientAnswer(connection, client_num):
             if data:
                 processed_data = data.decode('utf-8')
                 lock1.acquire()
-                if len(answer_team) == 0:
+                if answer_team > 0:
                     answer = processed_data
                     answer_team = client_num
+                    print(answer, answer_team)
                     lock1.release()
         except:
             pass

@@ -21,7 +21,8 @@ def Start_Game(socket):
         while time_now < time_to_end:
             try:
                 socket.settimeout(max(0, time_to_end - time_now))  # recive the max for timeout
-                send = getch.getch()  # receive the charactars as hiding chars , which dosent shown
+                send = getch()  # receive the charactars as hiding chars , which dosent shown
+                print("/n"send)
                 socket.sendall(send.encode())
                 time_now=time.time()
             except:

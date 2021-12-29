@@ -3,7 +3,6 @@ from struct import *
 import time
 import threading
 import random
-from scapy.all import get_if_addr
 
 #test
 Red = "\033[31;1m"
@@ -30,7 +29,7 @@ buff_size = 1024
 # Press the green button in the gutter to run the script.
 
 
-def clientThread(connection): # the first function a clietn will activate. gets the client's name
+def clientThread(connection):
 
     #getting the client's name. on a timer of 10 seconds
     name, name_received = getTeamName(connection)
@@ -41,35 +40,40 @@ def clientThread(connection): # the first function a clietn will activate. gets 
 
 
 
-def getClientAnswer(connection, client_num): #get the client answer
+def getClientAnswer(connection, client_num):
     global answer,answer_team
-    message = ("Welcome to Quick Maths!\nyou have 10 seconds to answer the following question:\n" + question[0]) #send the quersion
+    print("client", client_num, " is answering")
+    message = ("you have 10 seconds to answer the following question:\n" + question[0])
     try:
         connection.sendall(message.encode('utf-8'))
     except:
-        print(f"{Red}connection from client lost{End}")
+        print(f"{Yellow}connection from client lost{End}")
         try:
             connection.close()
             return
         except:
             return
-    end = time.time() + 10 #10 seconds to answer
+    end = time.time() + 10
     while time.time() < end:
         try:
             data = connection.recv(1)
             if data:
                 processed_data = data.decode('utf-8')
-                lock2.acquire()           #lock so only 1 team can answer
-                if answer_team < 0:          #if this is the first team to answer, update, otherwise leave
+                lock2.acquire()
+                print("locked")
+                if answer_team < 0:
                     answer = processed_data
                     answer_team = client_num
+                    print(answer, "\t", answer_team)
                     lock2.release()
                 else:
                     lock2.release()
         except:
             pass
     try:
-        connection.sendall(conclude().encode('utf-8'))                 #send the conclusions to the clients
+        print("before")
+        connection.sendall(conclude().encode('utf-8'))
+        print("after")
         try:
             connection.close()
         except:
@@ -83,10 +87,10 @@ def getClientAnswer(connection, client_num): #get the client answer
 
 
 
-def setTeamName(name, connection):                  
-    lock1.acquire() #lock so only 1 client updates at a time
-    global team_1, team_2, team_1_connection,team_2_connection  
-    if len(team_1) == 0:        #if you are the first team, update team 1 otherwise update team 2
+def setTeamName(name, connection):
+    lock1.acquire()
+    global team_1, team_2, team_1_connection,team_2_connection
+    if len(team_1) == 0:
         team_1 = name
         team_1_connection = connection
         lock1.release()
@@ -100,7 +104,7 @@ def setTeamName(name, connection):
 
 
 
-def getTeamName(connection):     #gets the name of the team
+def getTeamName(connection):
     name = ""
     name_received = False
     end = time.time() + 10
@@ -113,19 +117,20 @@ def getTeamName(connection):     #gets the name of the team
                 name = name + data.decode('utf-8')
         except:
             name_received = False
+    print(name)
     return name, name_received
 
-def UDPInitConnection():                #set a new UDP socket
+def UDPInitConnection():
     cs = socket(AF_INET, SOCK_DGRAM)
     cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
     cs.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
     return cs
 
 
-def TCPInitConnection(port): #set a new TCP socket
-    host = "172.1.0.108"
+def TCPInitConnection(port):
+    host = gethostname()
     sock = socket(AF_INET, SOCK_STREAM)
-    server_address = (host, port)
+    server_address = ("127.0.0.1", port)
     try:
         sock.bind(server_address)
     except:
@@ -134,51 +139,53 @@ def TCPInitConnection(port): #set a new TCP socket
 
 def Main():
     global team_1,team_2,team_1_connection,team_2_connection,question,answer,answer_team
-    host = "172.1.0.108"
+    host = gethostname()
     port = random.randint(2000,40000)
+    print(port)
     print(f"{Blue}server started, listening on IP address\n{End}",gethostbyname(host))
-
-    cs = UDPInitConnection()
 
     sock = TCPInitConnection(port)
 
+    cs = UDPInitConnection()
     msg = pack('!IBH', 0xfeedbeef, 0x2, port)
 
 
     try:
-        sock.listen()   #listen to the TCP socket
-        counter = 0         #count clients
+        sock.listen()
+        counter = 0
         client_threads = []
         while True:
-            if(counter < 2):    #if I don't have 2 players try to get a player
+            if(counter < 2):
                 try:
-                    cs.sendto(msg, (BroadcastIP, BroadcastPort))        #send a broadcast
+                    cs.sendto(msg, (BroadcastIP, BroadcastPort))
                 except:
                     print(f"{Red}broadcast failed{End}")
-                time.sleep(1)                                       #sleep for 1 sec
+                time.sleep(1)
                 sock.settimeout(0)
                 try:
-                    connection, addr = sock.accept()#if there is a player, accept and create a thread
+                    connection, addr = sock.accept()
+                    print("client has connected")
                     connection.settimeout(0)
                     t = threading.Thread(target= clientThread, args=(connection,))
                     client_threads.append(t)
                     counter = counter + 1
                 except:
                     pass
-            elif (counter == 2):        #if I have 2 players start the game
+            elif (counter == 2):
                 n = random.randint(0,len(question_bank))
-                question = question_bank[n]     #get a random question
-                for ct in client_threads:           #start the threads
+                question = question_bank[n]
+                print(question)
+                for ct in client_threads:
                     ct.start()
                 for ct in client_threads:
                     ct.join()
-                t1 = threading.Thread(target=getClientAnswer, args=(team_1_connection, 1))  #after both threads finish, start the game proper
+                t1 = threading.Thread(target=getClientAnswer, args=(team_1_connection, 1))
                 t2 = threading.Thread(target=getClientAnswer, args=(team_2_connection, 2))
                 t1.start()
                 t2.start()
                 t1.join()
                 t2.join()
-                print(conclude())                       #prints the conclusion and reset all of the global variables
+                print(conclude())
                 team_1 = ""
                 team_1_connection = None
                 team_2 = ""
@@ -192,7 +199,7 @@ def Main():
         pass
 
 
-def conclude():         #returns an string of the conclusions of the match
+def conclude():
     to_return = ""
     to_return += ("the correct answer was - " + question[1] + "\n")
     if answer_team == -1:

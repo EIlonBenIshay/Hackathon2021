@@ -69,6 +69,7 @@ def getClientAnswer(connection, client_num):
         except:
             pass
     try:
+        print("goofed")
         connection.sendall(conclude().encode('utf-8'))
         try:
             connection.close()

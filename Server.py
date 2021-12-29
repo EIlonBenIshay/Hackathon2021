@@ -56,6 +56,7 @@ def getClientAnswer(connection, client_num):
         try:
             data = connection.recv(1)
             if data:
+                print(data)
                 lock1.acquire()
                 if len(answer_team) == 0:
                     answer = data
@@ -168,6 +169,7 @@ def Main():
             elif (counter == 2):
                 n = random.randint(0,len(question_bank))
                 question = question_bank[n]
+                print(question)
                 for ct in client_threads:
                     ct.start()
                 for ct in client_threads:

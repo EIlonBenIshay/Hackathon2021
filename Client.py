@@ -46,7 +46,7 @@ def Main():
     cl.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     cl.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
-        cl.bind((get_if_address("eth2"), UDPPort))
+        cl.bind((get_if_addr("eth2"), UDPPort))
     except:
         print(f"{Red}error binding{End}")
 

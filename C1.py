@@ -6,7 +6,7 @@ import getch
 
 def Main():
     while True:
-        data = getch()
+        data = getch.getch()
         print("\n",data,"\n")
 
 

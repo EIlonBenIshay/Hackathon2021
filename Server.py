@@ -161,6 +161,7 @@ def Main():
                     t = threading.Thread(target= clientThread, args=(connection,))
                     client_threads.append(t)
                     counter = counter + 1
+                    print("client has connected")
                 except:
                     pass
             elif (counter == 2):

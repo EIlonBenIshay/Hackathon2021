@@ -55,7 +55,7 @@ def getClientAnswer(connection, client_num):
     end = time.time() + 10
     while time.time() < end:
         try:
-            data = connection.recv(buff_size)
+            data = connection.recv(1)
             if data:
                 processed_data = data.decode('utf-8')
                 print("the data is: ", processed_data)

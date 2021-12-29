@@ -23,8 +23,8 @@ def Start_Game(socket):
                 send = getch.getch()  # receive the charactars as hiding chars , which dosent shown
                 print(send)
                 socket.sendall(send.encode('utf-8'))
+                print("was sent")
             except:
-                print("failed to send")
                 pass
     except:
         pass

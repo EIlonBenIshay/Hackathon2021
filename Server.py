@@ -24,6 +24,7 @@ question_bank = [["2+2","4"],["(5*2*7+8)*(5*0*5)+3","3"],["(6^2)/4","9"],["7+6+5
  ["(2^5+18)/10","5"],["1+1","2"],["7*7/7","7"],["3^4/9","9"],["4^2-7","9"],["10*9*8*7*0*4","0"],["500/25/5","4"],["69*2/6-15","8"],["6*5/3-1","9"],["1024/256","4"],["7+10-8-6","3"]]
 BroadcastIP = '255.255.255.255'
 BroadcastPort = 13117
+buff_size = 1024
 
 # Press the green button in the gutter to run the script.
 
@@ -54,7 +55,7 @@ def getClientAnswer(connection, client_num):
     end = time.time() + 10
     while time.time() < end:
         try:
-            data = connection.recv(1)
+            data = connection.recv(buff_size)
             if data:
                 print(data)
                 lock1.acquire()

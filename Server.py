@@ -122,7 +122,8 @@ def UDPInitConnection():                #set a new UDP socket
     return cs
 
 
-def TCPInitConnection(host, port): #set a new TCP socket
+def TCPInitConnection(port): #set a new TCP socket
+    host = get_if_addr("eth2")
     sock = socket(AF_INET, SOCK_STREAM)
     server_address = (host, port)
     try:
@@ -137,7 +138,7 @@ def Main():
     port = random.randint(2000,40000)
     print(f"{Blue}server started, listening on IP address\n{End}",gethostbyname(host))
 
-    sock = TCPInitConnection(host, port)
+    sock = TCPInitConnection(port)
 
     cs = UDPInitConnection()
     msg = pack('!IBH', 0xfeedbeef, 0x2, port)

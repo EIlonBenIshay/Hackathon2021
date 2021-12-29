@@ -143,34 +143,27 @@ def Main():
 
     try:
         sock.listen()
+        counter = 0
+        client_threads = []
         while True:
-            print("first while")
-            counter = 0
-            client_threads = []
+            print("while")
+            if(counter < 2):
+                try:
+                    cs.sendto(msg, (BroadcastIP, BroadcastPort))
+                except:
+                    print(f"{Red}broadcast failed{End}")
+                time.sleep(1)
+                sock.settimeout(0)
+                try:
+                    connection, addr = sock.accept()
+                    connection.settimeout(0)
 
-            end = time.time() + 10
-
-            while time.time() < end:
-                print("second while")
-                if(counter < 2):
-                    try:
-                        cs.sendto(msg, (BroadcastIP, BroadcastPort))
-                    except:
-                        print(f"{Red}broadcast failed{End}")
-                    time.sleep(1)
-                    sock.settimeout(0)
-                    try:
-                        connection, addr = sock.accept()
-                        connection.settimeout(0)
-
-                        t = threading.Thread(target= clientThread, args=(connection,))
-                        client_threads.append(t)
-                        counter = counter + 1
-                    except:
-                        pass
-                elif (counter == 2):
-                    break
-            if (counter == 2):
+                    t = threading.Thread(target= clientThread, args=(connection,))
+                    client_threads.append(t)
+                    counter = counter + 1
+                except:
+                    pass
+            elif (counter == 2):
                 n = random.randint(0,len(question_bank))
                 question = question_bank[n]
                 for ct in client_threads:
@@ -184,13 +177,15 @@ def Main():
                 t1.join()
                 t2.join()
                 print(conclude())
-            team_1 = ""
-            team_1_connection = None
-            team_2 = ""
-            team_2_connection = None
-            question = []
-            answer = ''
-            answer_team = -1
+                team_1 = ""
+                team_1_connection = None
+                team_2 = ""
+                team_2_connection = None
+                question = []
+                answer = ''
+                answer_team = -1
+                counter = 0
+                client_threads = []
     except:
         pass
 

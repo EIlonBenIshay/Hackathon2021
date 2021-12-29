@@ -5,6 +5,11 @@ import threading
 import random
 
 
+Red = "\033[31;1m"
+Green = "\033[32;1m"
+Yellow = "\033[33;1m"
+Blue = "\033[34;1m"
+End = "\033[0;1m"
 #define some global variables for the server
 team_1 = ""
 team_1_connection = None
@@ -40,7 +45,7 @@ def getClientAnswer(connection, client_num):
     try:
         connection.sendall(message.encode('utf-8'))
     except:
-        print("connection from client lost")
+        print(f"{Yellow}connection from client lost{End}")
         try:
             connection.close()
             return
@@ -123,14 +128,14 @@ def TCPInitConnection(ourPort):
     try:
         sock.bind(server_address)
     except:
-        print("error binding")
+        print(f"{Red}error binding{End}")
     return sock
 
 def Main():
     global team_1,team_2,team_1_connection,team_2_connection,question,answer,answer_team
     host = gethostname()
     port = random.randint(2000,40000)
-    print("server started, listening on IP address",gethostbyname(host))
+    print(f"{Blue}server started, listening on IP address\n{End}",gethostbyname(host))
 
     sock = TCPInitConnection(port)
 
@@ -149,7 +154,7 @@ def Main():
                     try:
                         cs.sendto(msg, (BroadcastIP, BroadcastPort))
                     except:
-                        print("broadcast failed")
+                        print(f"{Red}broadcast failed{End}")
                     time.sleep(1)
                     sock.settimeout(0)
                     try:

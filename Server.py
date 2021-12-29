@@ -62,7 +62,7 @@ def getClientAnswer(connection, client_num):
                 if answer_team > 0:
                     answer = processed_data
                     answer_team = client_num
-                    print(answer, answer_team)
+                    print(answer, "\t", answer_team)
                     lock1.release()
         except:
             pass

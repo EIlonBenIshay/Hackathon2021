@@ -203,7 +203,7 @@ def conclude():
     global answer,question,answer_team
     to_return += ("the correct answer was - " + question[1] + "\n")
     if answer == '':
-        to_return =  "It's a Draw!"
+        to_return += "It's a Draw!"
     else:
         if answer == question[1]:
             if answer_team == 1:

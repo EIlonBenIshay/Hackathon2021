@@ -48,7 +48,7 @@ def Main():
     cl.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     cl.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
-        cl.bind(("172.99.0.108", UDPPort))
+        cl.bind(("", UDPPort))
     except:
         print(f"{Red}error binding{End}")
 

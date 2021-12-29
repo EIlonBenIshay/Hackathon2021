@@ -158,8 +158,8 @@ def Main():
                 try:
                     print("attempt to connect client")
                     connection, addr = sock.accept()
-                    connection.settimeout(0)
                     print("client has connected")
+                    connection.settimeout(0)
                     t = threading.Thread(target= clientThread, args=(connection,))
                     client_threads.append(t)
                     counter = counter + 1

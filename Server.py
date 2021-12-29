@@ -146,7 +146,6 @@ def Main():
         counter = 0
         client_threads = []
         while True:
-            print("while")
             if(counter < 2):
                 try:
                     cs.sendto(msg, (BroadcastIP, BroadcastPort))

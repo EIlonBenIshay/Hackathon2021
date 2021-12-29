@@ -41,6 +41,7 @@ def clientThread(connection):
 
 
 def getClientAnswer(connection, client_num):
+    print("client", client_num, " is answering")
     global answer_team, answer
     message = ("you have 10 seconds to answer the following question:\n" + question[0])
     try:
@@ -57,6 +58,7 @@ def getClientAnswer(connection, client_num):
         try:
             data = connection.recv(1)
             if data:
+                print("wow", client_num)
                 processed_data = data.decode('utf-8')
                 print("the data is: ", processed_data)
                 lock1.acquire()

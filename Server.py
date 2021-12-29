@@ -154,13 +154,14 @@ def Main():
                 time.sleep(1)
                 sock.settimeout(0)
                 try:
+                    print("attempt to connect client")
                     connection, addr = sock.accept()
                     connection.settimeout(0)
-
+                    print("client has connected")
                     t = threading.Thread(target= clientThread, args=(connection,))
                     client_threads.append(t)
                     counter = counter + 1
-                    print("client has connected")
+                    
                 except:
                     pass
             elif (counter == 2):

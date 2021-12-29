@@ -124,7 +124,7 @@ def UDPInitConnection():                #set a new UDP socket
 def TCPInitConnection(port): #set a new TCP socket
     host = gethostname()
     sock = socket(AF_INET, SOCK_STREAM)
-    server_address = ("127.0.0.1", port)
+    server_address = (host, port)
     try:
         sock.bind(server_address)
     except:

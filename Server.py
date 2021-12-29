@@ -41,6 +41,7 @@ def clientThread(connection):
 
 
 def getClientAnswer(connection, client_num):
+    global answer,answer_team
     print("client", client_num, " is answering")
     message = ("you have 10 seconds to answer the following question:\n" + question[0])
     try:

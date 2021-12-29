@@ -113,12 +113,11 @@ def getTeamName(connection):
             name_received = False
     return name, name_received
 
-def UDPInitConnection(port):
+def UDPInitConnection():
     cs = socket(AF_INET, SOCK_DGRAM)
     cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
     cs.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
-    msg = pack('!IBH', 0xfeedbeef, 0x2, port)
-    return cs, msg
+    return cs
 
 
 def TCPInitConnection(port):
@@ -140,7 +139,9 @@ def Main():
 
     sock = TCPInitConnection(port)
 
-    cs, msg = UDPInitConnection(port)
+    cs = UDPInitConnection(port)
+    msg = pack('!IBH', 0xfeedbeef, 0x2, port)
+
 
     try:
         sock.listen()
@@ -157,7 +158,7 @@ def Main():
                 try:
                     print("attempt to connect client")
                     connection, addr = sock.accept()
-                    #connection.settimeout(0)
+                    connection.settimeout(0)
                     print("client has connected")
                     t = threading.Thread(target= clientThread, args=(connection,))
                     client_threads.append(t)

@@ -21,6 +21,7 @@ def Start_Game(socket):
             try:
                 #socket.settimeout(max(0, time_to_end - time_now))  # recive the max for timeout
                 send = getch.getch()  # receive the charactars as hiding chars , which dosent shown
+                print(send)
                 socket.sendall(send.encode())
             except:
                 pass

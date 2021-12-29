@@ -136,7 +136,7 @@ def Main():
     global team_1,team_2,team_1_connection,team_2_connection,question,answer,answer_team
     host = get_if_addr("eth2")
     port = random.randint(2000,40000)
-    print(f"{Blue}server started, listening on IP address\n{End}",gethostbyname(host))
+    print(f"{Blue}server started, listening on IP address\n{End}",(host))
 
     cs = UDPInitConnection()
 

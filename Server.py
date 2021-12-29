@@ -124,7 +124,7 @@ def UDPInitConnection(port):
 def TCPInitConnection(port):
     host = gethostname()
     sock = socket(AF_INET, SOCK_STREAM)
-    server_address = ("127.0.0.1", port)
+    server_address = (host, port)
     try:
         sock.bind(server_address)
     except:
@@ -162,8 +162,8 @@ def Main():
                     t = threading.Thread(target= clientThread, args=(connection,))
                     client_threads.append(t)
                     counter = counter + 1
-                    
                 except:
+                    print("connection failed")
                     pass
             elif (counter == 2):
                 n = random.randint(0,len(question_bank))

@@ -138,9 +138,10 @@ def Main():
     port = random.randint(2000,40000)
     print(f"{Blue}server started, listening on IP address\n{End}",gethostbyname(host))
 
+    cs = UDPInitConnection()
+
     sock = TCPInitConnection(port)
 
-    cs = UDPInitConnection()
     msg = pack('!IBH', 0xfeedbeef, 0x2, port)
 
 

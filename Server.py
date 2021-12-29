@@ -59,6 +59,7 @@ def getClientAnswer(connection, client_num):
             if data:
                 processed_data = data.decode('utf-8')
                 lock2.acquire()
+                print("locked")
                 if answer_team > 0:
                     answer = processed_data
                     answer_team = client_num

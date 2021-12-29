@@ -157,13 +157,12 @@ def Main():
                 try:
                     print("attempt to connect client")
                     connection, addr = sock.accept()
-                    connection.settimeout(0)
+                    #connection.settimeout(0)
                     print("client has connected")
                     t = threading.Thread(target= clientThread, args=(connection,))
                     client_threads.append(t)
                     counter = counter + 1
                 except:
-                    print("connection failed")
                     pass
             elif (counter == 2):
                 n = random.randint(0,len(question_bank))

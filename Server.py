@@ -55,7 +55,6 @@ def getClientAnswer(connection, client_num):
             return
     end = time.time() + 10
     while time.time() < end:
-        print("panic")
         try:
             data = connection.recv(1)
             if data:

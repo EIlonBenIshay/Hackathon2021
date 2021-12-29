@@ -68,7 +68,7 @@ def Main():
             print("data1 = /n", hex(data1))
             print("data2 = /n", hex(data2))
             
-            if data2 == 0x2 and data1 == 0xfeedbeef:  # checking recieved message from broadcast
+            if data2 == 0x2 and data1 == 0xabcddcba:  # checking recieved message from broadcast
                 print(f"{Blue}received offer from{End}", host, f"{Blue},attempting to connect...\n{End}")
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 server_address = (host, TCP_Port)
